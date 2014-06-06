@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+        <meta charset="utf-8">
+        <title>Foxy Weather</title>
+        <meta name="viewport" content="width=device-width" />
+        <link rel="stylesheet" href="stylesheets/style.css">
+        <script data-main="javascripts/main" src="javascripts/require.js"></script>
+</head>
+<!-- //TODO: Responsible design (vía Modelo de Caja Flexible)-->
+
+<body id="weatherNode">
+
+<article class="flex-box-cabecera">
+        <section class="encabezado">
+                <h1>
+                        <a href="" >
+                                <span class="title-detail-begin">Fox</span><span>y</span>
+                                <span class="title-detail">Weather</span>
+                        </a>
+                </h1>
+        </section>
+        <section id="condicionesActuales" class="condiciones-actuales oculto">
+                <div class="info oculto">
+                        <span class="localidad-temperatura"></span>
+                        <span class="estado estado-temperatura"></span>
+                        <span class="temperatura temperatura-temperatura"></span>
+                </div>
+                <div class="imagen-presente">
+                        <img class="imagen-actual" src="">
+                </div>
+        </section>
+</article>
+
+<main class="cuerpo">
+        <article>
+                <section class="entrada">
+                        <input id="localidad" type="search" list="localidades" placeholder="Localidad">
+                        <a id="getWeatherInfo" alt="Buscar" class="icon-search"></a>
+                        <!-- //TODO: Ir añadiendo las localidades consultadas a la lista para facilitar una posible búsqueda futura-->
+                        <!-- //TODO: Quizá sería bueno guardar esta información en localStorage-->
+                        <datalist id="localidades">
+                               <!--     <option>San Fernando de Henares</option>
+                                        <option>Madrid</option>
+                                        <option>Casavieja</option>      -->
+                        </datalist>
+                        <!-- Muestra un gif animado mientra se ejecuta la consulta Ajax -->
+                        <span id="indicadorAjaxEnCurso" class="oculto">
+                                <img src="images/ajax-loader.gif">
+                        </span>
+                </section>
+        </article>
+
+        <article id="forecast-container" class="flex-box-resultado oculto">
+
+        </article>
+
+        <div id="error-container" class="oculto"></div>
+        <div id="validaciones-container" class="oculto"></div>
+</main>
+<footer>
+        <ul id="social">
+          <a href="http://www.twitter.com/babytruckdriver" class="icon-social-twitter">
+            <li class="hide">Twitter</li>
+          </a>
+          <a href="https://github.com/babytruckdriver/" class="icon-social-github">
+            <li class="hide">GitHub</li>
+          </a>
+        </ul>
+</footer>
+
+<script  id="forecast-template" type="text/x-handlebars-template">
+<div class="resultado tiempo-actual">
+        <ul>
+                <li class="cabecera">{{cabecera}}</li>
+                <li>
+                        <ul>
+                                <li class="centrado">
+                                        <img id="imagen" class="imagen-reducida" src="{{imagen}}">
+                                </li>
+                                <li class="text-info">Temp:
+                                        <span id="temperatura" class="resaltado">{{temperatura}}</span>
+                                </li>
+                                <li class="text-info">Estado:
+                                        <span id="estado" class="resaltado">{{estado}}</span>
+                                </li>
+                                <li class="text-info">Precipitación:
+                                        <span id="precipitacion" class="resaltado">{{precipitacion}}</span>
+                                </li>
+                                <li class="text-info">Viento:
+                                        <span id="velocidad-viento" class="resaltado">{{velocidadViento}}</span>
+                                </li>
+                        </ul>
+                </li>
+        </ul>
+</div>
+</script>
+
+</body>
+
+</html>

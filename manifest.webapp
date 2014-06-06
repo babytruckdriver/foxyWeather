@@ -1,0 +1,22 @@
+{
+  "name": "Foxy Weather",
+  "description": "A foxy weather app for Firefox OS",
+  "launch_path": "/index.html",
+  "icons": {
+    "128": "/icons/Weather-128.png"
+  },
+  "developer": {
+    "name": "Samuel González Izquierdo",
+    "url": "https://github.com/babytruckdriver/"
+  },
+  "locales": {
+    "es": {
+      "name": "Foxy Weather"
+    },
+    "en": {
+      "name": "Foxy Weather"
+    }
+  },
+  "default_locale": "en",
+  "fullscreen": true
+}

@@ -1,0 +1,338 @@
+/*
+    Estilos globales
+*/
+
+html {
+        margin: 0;
+        padding: 0;
+        /*padding: 50px;*/
+}
+body {
+        padding: 0;
+        font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+        line-height: 1.4em;
+        background: #eeeeee;
+        color: #333333;
+        max-width: 520px;
+        margin: 0 auto; /* Centra verticalmente */
+}
+h1 {
+        margin: 10px 0 10px 0;
+        font-size: 2em;
+}
+/* Quito los estilos por defecto de las listas desordenadas*/
+
+ul {
+        list-style-type: none;
+        /* Quita las tabulaciones por defecto de las listas */
+        margin: 0;
+        padding: 0;
+}
+
+ul > li {
+        text-align: left;
+}
+/* Quito los estilos por defecto que pudieran tener los links*/
+
+a:link,
+:visited {
+        text-decoration: none;
+        border: none;
+        color: #000;
+}
+/*
+    Estilos específicos de la aplicación
+*/
+
+#weatherNode {
+        background: #fff;
+        padding: 20px;
+        margin-bottom: 40px;
+        box-shadow: rgba(0, 0, 0, 0.2) 0 2px 6px 2px;
+        border-radius: 0 0 5px 5px;
+}
+/*
+    Estilos link de búsqueda
+*/
+
+#getWeatherInfo {
+        margin: 6px;
+        width: 20px;
+        height: 20px;
+        position: relative;
+        cursor: pointer;
+}
+
+/* Otros estilos */
+
+div#error-container {
+        background: #F5A9A9;
+        color: white;
+        width: 90%;
+        /* Si no se le da ancho el centrado (margin) no funciona */
+        /*height: 30px; */
+        padding: 10px 10px 10px 10px;
+        margin: 10px auto;
+        /* centra en la página */
+        text-align: center;
+        border-radius: 5px;
+}
+#validaciones-container {
+        background: #F5A9A9;
+        color: white;
+        width: 90%;
+        /* Si no se le da ancho el centrado (margin) no funciona */
+        /*height: 30px;*/
+        padding: 10px 10px 10px 10px;
+        margin: 10px auto;
+        /* centra en la página */
+        text-align: center;
+        border-radius: 5px;
+}
+.encabezado {
+        width: 40%;
+        order: 1;
+}
+.imagen-presente {
+        position: relative;
+        float: right;
+        text-align: center;
+        width: 30%;
+        height: 100%;
+        top: 15px;
+}
+.cuerpo {
+        clear: both;
+}
+.entrada {
+        display: flex;
+        flex-direction: row-reverse;
+        margin: 10px;
+        background-color: #ebeaea;
+        border-radius: 0 6px 6px 0;
+}
+.error-input {
+        background: #F5A9A9;
+}
+.clear {
+        clear: both;
+}
+.info {
+        position: relative;
+        float: left;
+        text-align: right;
+        width: 70%;
+        font-weight: bold;
+        padding: 0 10px 0 0;
+        /* Este estilo hace que el 'padding' no añada tamaño al alemento (no sumando más del 100%) */
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+}
+.title-detail {
+        color: #D7DF01;
+        box-shadow: rgba(0, 0, 0, 0.2) 0 2px 6px 0;
+}
+.title-detail-begin {
+        font-style: italic;
+}
+.estado-temperatura {
+        font-size: 1em;
+        display: block;
+}
+.temperatura-temperatura {
+        display: block;
+        font-size: 4em;
+        line-height: 48px;
+        /* amplia la altura para que entre el tamñaño de letra */
+}
+.localidad {
+        font-weight: bold;
+}
+.imagen-actual {
+        opacity: 0.6;
+        border-radius: 5px 5px 5px 5px;
+        transform: scale(1.5);
+        -webkit-transform: scale(1.5);
+}
+.imagen-reducida {
+        opacity: 0.6;
+        border-radius: 5px 5px 5px 5px;
+        transform: scale(1);
+}
+.derecha {
+        text-align: right;
+}
+.oculto {
+        display: none;
+}
+/*
+    Estilos de la sección de información
+*/
+
+.resultado {
+        padding: 5px;
+        /* Este estilo hace que el 'padding' no añada tamaño al alemento (no sumando más del 100%) */
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+}
+.tiempo-actual {
+        font-size: 11px;
+}
+.cabecera {
+        font-weight: bold;
+        padding: 5px;
+        text-align: center;
+}
+.localidad-temperatura {
+        font-size: 1em;
+        display: block;
+        color: #A4A4A4;
+}
+#localidad {
+        order: 2;
+        padding: 2px 6px;
+        border: 1px solid;
+        border-color: #ebeaea;
+        width: 150px;
+
+        transition: width 0.5s ease-out;
+}
+
+#social {
+        margin: 5px;
+        padding: 5px;
+        background-color: #fffdea;
+        border-radius: 4px;
+}
+
+@font-face {
+        font-family: "entypo";
+        src: url("../fonts/Entypo/entypo.eot");
+        src: url("../fonts/Entypo/entypoeot?#iefix") format("embedded-opentype"),
+                url("../fonts/Entypo/entypo.woff") format("woff"),
+                url("../fonts/Entypo/entypo.ttf") format("truetype"),
+                url("../fonts/Entypoentypo.svg#icons") format("svg");
+        font-weight: normal;
+        font-style: normal;
+}
+
+@font-face {
+        font-family: "entypoSocial";
+        src: url("../fonts/Entypo/entypo-social.eot");
+        src: url("../fonts/Entypo/entypo-social.eot?#iefix") format("embedded-opentype"),
+                url("../fonts/Entypo/entypo-social.woff") format("woff"),
+                url("../fonts/Entypo/entypo-social.ttf") format("truetype"),
+                url("../fonts/Entypoentypo-social.svg#icons") format("svg");
+        font-weight: normal;
+        font-style: normal;
+}
+
+[class*="icon-"] {
+        background-image: none;
+        display: inline;
+        font-size: 1em;
+        font-style: normal !important;
+        font-weight: normal !important;
+        height: 1em;
+        overflow: visible;
+        width: 1em;
+}
+
+[class*="icon-"]::before {
+        content: '+';
+        display: inline-block;
+        font-family: "entypo", fantasy !important;
+        /*line-height: 1;*/
+        position: relative;
+        top: 2px;
+        -webkit-font-smoothing: antialiased;
+        font-smoothing: antialiased;
+}
+
+[class*="icon-social"]::before {
+        font-family: "entypoSocial", fantasy !important;
+        /*line-height: 1;*/
+        position: relative;
+        top: 2px;
+        -webkit-font-smoothing: antialiased;
+        font-smoothing: antialiased;
+        opacity: .6;
+}
+
+[class*="icon-social"]:hover::before {
+        opacity: .3;
+}
+
+[class*="icon-social"]:active::before {
+         color: rgba(0,0,0,.5);
+}
+
+.hide {
+        clip: rect(1px, 1px, 1px, 1px);
+        height: 0;
+        opacity: 0;
+        position: absolute;
+        visibility: hidden;
+        width: 0;
+}
+
+.icon-search::before {
+        content: "\1F50D";
+        font-size: 3em;
+}
+
+.icon-search:hover::before{
+        opacity: .6;
+}
+
+.icon-search:active::before{
+        color: rgba(0,0,0,.5);
+}
+
+.icon-social-twitter::before {
+        content: "\F309";
+        font-size: 3em;
+
+}
+
+.icon-social-github::before {
+        content: "\F300";
+        font-size: 3em;
+}
+
+.condiciones-actuales {
+        width: 60%;
+        order: 2;
+}
+
+.flex-box-cabecera {
+        display: flex;
+        flex-direction: row;
+         margin: 0 0 30px 0;
+}
+
+.flex-box-resultado {
+        display: flex;
+        flex-direction: row;
+}
+
+.resaltado {
+        font-weight: bold;
+}
+
+.centrado {
+        text-align: center;
+}
+
+@media all and (max-width: 300px) {
+        [class*="flex-box"] {
+                flex-direction: column;
+        }
+}
+
+@media all and (max-width: 520px) {
+        [class="text-info"] {
+                text-align: center;
+        }
+}
