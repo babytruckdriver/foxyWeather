@@ -1,4 +1,4 @@
-foxyWeather
+Foxy Weather
 ===========
 
 A foxy weather app for Firefox OS.
