@@ -5,6 +5,16 @@
 // Estas funciones, si su uso es lo suficientemente común, podrían ir en un archivo '.js' a parte.
 
 define({
+
+        // Muestra 'msg' por consola en caso de que la variable DEBUG sea true
+        // NOTE: La varibale DEBUG en Producción siembre debe ser false
+        DEBUG: true,
+        log: function (msg) {
+                "use strict";
+                if (this.DEBUG) {
+                        console.log(msg);
+                }
+        },
         getDiaSemana: function (numDia) {
                 "use strict";
 
