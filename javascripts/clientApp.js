@@ -1,5 +1,5 @@
 /*jslint indent:8, devel:true, browser:true, vars:true*/
-/*global jQuery, $, Handlebars*/
+/*global jQuery, $, Handlebars, define*/
 
 define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
         "use strict";
@@ -25,7 +25,7 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                 cacheElements: function () {
                         this.window = $(window);
                         this.forecastTemplate = Handlebars.compile($('#forecast-template').html());
-                        this.weatherNode = $("#weatherNode");
+                        this.weatherNode = $("#foxyWeather");
                         this.condicionesActuales = this.weatherNode.find("#condicionesActuales");
                         this.cuerpo = this.weatherNode.find(".cuerpo");
                         this.temperatura = this.condicionesActuales.find(".temperatura");
@@ -44,7 +44,6 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
 
                         // Al clicar el botón se consulta el tiempo para la localidad indicada
                         this.btoGetWeatherInfo.on("click", this.eventWeatherInfo.bind(this));
-                        this.btoGetWeatherInfo.on("mouseover", this.eventMuestraBuscar.bind(this));
                         this.localidad.on("click", this.eventMuestraBuscar.bind(this));
                         this.localidad.on("keyup", this.eventLocalidad.bind(this));
 
@@ -214,98 +213,93 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                 // Función que ejecuta en caso de que la petición Ajax 'getWeatherInfo' haya sido exitosa
                 // Muestra en pantalla la información meteorológica
                 printWeather: function (json) {
-                        console.log(json);
-                        // Si no se ha producido ningún error al tratar el objeto JSON en el Backend
-                        if (true) {
 
-                                // Si la respuesta no contiene errores
-                                if (json.data.error === undefined) {
+                        // Si la respuesta no contiene errores
+                        if (json.data.error === undefined) {
 
-                                        //Actualizar hash e historial
-                                        util.historyHandler(this.localidad.val().trim().toLocaleLowerCase());
+                                //Actualizar hash e historial
+                                util.historyHandler(this.localidad.val().trim().toLocaleLowerCase());
 
-                                        // Cachear la respuesta del servidor (los errores no se cachean, solo las respuestas válidas)
-                                        // Si la respuesta ya está cacheada y está vigente (no es antigua) esta nos e cacheará. Esta funcionalidad se implementa en util.cache
-                                        var key = this.localidad.val().trim().toUpperCase();
-                                        util.cache.setResponse(key, {
-                                                type: FORECAST_CALL,
-                                                date: Date(),
-                                                response: json
+                                // Cachear la respuesta del servidor (los errores no se cachean, solo las respuestas válidas)
+                                // Si la respuesta ya está cacheada y está vigente (no es antigua) esta nos e cacheará. Esta funcionalidad se implementa en util.cache
+                                var key = this.localidad.val().trim().toUpperCase();
+                                util.cache.setResponse(key, {
+                                        type: FORECAST_CALL,
+                                        date: Date(),
+                                        response: json
+                                });
+
+                                // Carga del tiempo actual
+                                this.temperatura.text(json.data.current_condition[0].temp_C + "Cº");
+                                this.estado.text(json.data.current_condition[0].weatherDesc[0].value);
+                                $(this.temperatura).closest("div").show();
+                                this.localidadTemperatura.text(json.data.request[0].query);
+
+                                // FUTURE utilizar los siguientes datos referentes al tiempo actual
+                                /*
+                                $("#cloud-cover").text(json.data.current_condition[0].cloudcover + "%");
+                                $("#precipitacion").text(json.data.current_condition[0].precipMM + "mm");
+                                $("#velocidad-viento").text(json.data.current_condition[0].windspeedKmph + "Km/h");
+                                */
+
+                                // Carga de la imagen asociada al tiempo actual
+                                this.imagenActual.attr("src", json.data.current_condition[0].weatherIconUrl[0].value);
+
+                                // Presentación de la previsión meteorológica (diferentes de temperatura actual)
+                                var jsonForecast = json.data.weather;
+
+                                if (jsonForecast !== undefined) {
+
+                                        // Se quiere utilizar 'this' dentro del bucle, pero los bucles crean sus propios 'this'
+                                        // por lo que guardo el 'this' actual en una variable alcanzable desde dentro del bucle llamada 'that'
+                                        var that = this;
+                                        this.forecastContainer.empty();
+
+                                        $.each(jsonForecast, function (key, value) {
+
+                                                // Mostrar fecha en formato Español/España
+                                                var date = new Date(value.date);
+                                                var day = date.getDate();
+                                                var month = date.getMonth();
+                                                var year = date.getFullYear();
+
+                                                var formatedDay = util.getDiaSemana(date.getDay()).complete;
+                                                var formatedMonth = util.getMes(month).complete;
+                                                var diaMes =  day + " " + formatedMonth;
+
+                                                var hoy = new Date();
+
+                                                if ((hoy.getDate() === day) && (hoy.getMonth() === month) && (hoy.getFullYear() === year)) {
+                                                        formatedDay = "Hoy";
+                                                }
+
+                                                // Objeto de configuración de entrada para la plantilla Handlebars 'forecastTemplate'
+                                                var forecast = {
+                                                        imagen: value.weatherIconUrl[0].value,
+                                                        cabeceraDiaSemana: formatedDay,
+                                                        cabeceraDiaMes: diaMes,
+                                                        temperatura: value.tempMaxC + "/" + value.tempMinC + "Cº Max/min",
+                                                        estado: value.weatherDesc[0].value,
+                                                        precipitacion: value.precipMM + "mm",
+                                                        velocidadViento: value.windspeedKmph + "Km/h"
+                                                };
+                                                that.forecastContainer.append(that.forecastTemplate(forecast));
                                         });
 
-                                        // Carga del tiempo actual
-                                        this.temperatura.text(json.data.current_condition[0].temp_C + "Cº");
-                                        this.estado.text(json.data.current_condition[0].weatherDesc[0].value);
-                                        $(this.temperatura).closest("div").show();
-                                        this.localidadTemperatura.text(json.data.request[0].query);
+                                        this.forecastContainer.append("<div class='clear'></div>");
+                                }
 
-                                        // FUTURE utilizar los siguientes datos referentes al tiempo actual
-                                        /*
-                                        $("#cloud-cover").text(json.data.current_condition[0].cloudcover + "%");
-                                        $("#precipitacion").text(json.data.current_condition[0].precipMM + "mm");
-                                        $("#velocidad-viento").text(json.data.current_condition[0].windspeedKmph + "Km/h");
-                                        */
-
-                                        // Carga de la imagen asociada al tiempo actual
-                                        this.imagenActual.attr("src", json.data.current_condition[0].weatherIconUrl[0].value);
-
-                                        // Presentación de la previsión meteorológica (diferentes de temperatura actual)
-                                        var jsonForecast = json.data.weather;
-
-                                        if (jsonForecast !== undefined) {
-
-                                                // Se quiere utilizar 'this' dentro del bucle, pero los bucles crean sus propios 'this'
-                                                // por lo que guardo el 'this' actual en una variable alcanzable desde dentro del bucle llamada 'that'
-                                                var that = this;
-                                                this.forecastContainer.empty();
-
-                                                $.each(jsonForecast, function (key, value) {
-
-                                                        // Mostrar fecha en formato Español/España
-                                                        var date = new Date(value.date);
-                                                        var day = date.getDate();
-                                                        var month = date.getMonth();
-                                                        var year = date.getFullYear();
-
-                                                        var formatedDay = util.getDiaSemana(date.getDay()).complete;
-                                                        var formatedMonth = util.getMes(month).complete;
-                                                        var fechaFormateada = formatedDay + " " + day + " " + formatedMonth;
-
-                                                        var hoy = new Date();
-
-                                                        if ((hoy.getDate() === day) && (hoy.getMonth() === month) && (hoy.getFullYear() === year)) {
-                                                                fechaFormateada = "Hoy";
-                                                        }
-
-                                                        // Creo objeto de configuración de entrada para la plantilla Handlebars 'forecastTemplate'
-                                                        var forecast = {
-                                                                imagen: value.weatherIconUrl[0].value,
-                                                                cabecera: fechaFormateada,
-                                                                temperatura: value.tempMaxC + "/" + value.tempMinC + "Cº Max/min",
-                                                                estado: value.weatherDesc[0].value,
-                                                                precipitacion: value.precipMM + "mm",
-                                                                velocidadViento: value.windspeedKmph + "Km/h"
-                                                        };
-                                                        that.forecastContainer.append(that.forecastTemplate(forecast));
-                                                });
-
-                                                this.forecastContainer.append("<div class='clear'></div>");
-                                        }
-
-                                        // Animación para la presentación del listado de datos y la imagen
-                                        if (this.forecastContainer.is(":visible")) {
-                                                this.forecastContainer.slideUp(200).delay(200).slideDown(1000);
-                                                this.condicionesActuales.hide().slideDown("1000");
-                                        } else {
-                                                this.forecastContainer.slideDown(1000);
-                                                this.condicionesActuales.hide().slideDown("1000");
-                                        }
+                                // Animación para la presentación del listado de datos y la imagen
+                                if (this.forecastContainer.is(":visible")) {
+                                        this.forecastContainer.slideUp(200).delay(200).slideDown(1000);
+                                        this.condicionesActuales.hide().slideDown("1000");
                                 } else {
-                                        // Se pasa el error a la función manejadora de errores
-                                        this.errorHandle({statusText: json.data.error[0].msg, status: 200});
+                                        this.forecastContainer.slideDown(1000);
+                                        this.condicionesActuales.hide().slideDown("1000");
                                 }
                         } else {
-                                this.errorHandle({statusText: "Ha ocurrido un problema al recuperar la información.", status: 500});
+                                // Se pasa el error a la función manejadora de errores
+                                this.errorHandle({statusText: json.data.error[0].msg, status: 200});
                         }
                 }
 

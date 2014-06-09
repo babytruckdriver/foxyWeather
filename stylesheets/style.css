@@ -44,7 +44,7 @@ a:link,
     Estilos específicos de la aplicación
 */
 
-#weatherNode {
+#foxyWeather {
         background: #fff;
         padding: 20px;
         margin-bottom: 40px;
@@ -176,6 +176,7 @@ div#error-container {
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
 }
+
 .tiempo-actual {
         font-size: 11px;
 }
@@ -183,6 +184,9 @@ div#error-container {
         font-weight: bold;
         padding: 5px;
         text-align: center;
+}
+.cabecera>span {
+        display: inline-block;
 }
 .localidad-temperatura {
         font-size: 1em;
@@ -331,8 +335,16 @@ div#error-container {
         }
 }
 
-@media all and (max-width: 520px) {
+/*Resolución de Firefox OS en vertical*/
+@media all and (max-width: 320px) {
         [class="text-info"] {
                 text-align: center;
+        }
+}
+
+/* Si el ancho de pantalla es menor que 400px no se visualiza toda la información diaria del tiempo*/
+@media all and (max-width: 400px) {
+        .resultado .extra {
+                display: none;
         }
 }

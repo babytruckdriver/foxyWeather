@@ -7,10 +7,18 @@
         <meta name="viewport" content="width=device-width" />
         <link rel="stylesheet" href="stylesheets/style.css">
         <script data-main="javascripts/main" src="javascripts/require.js"></script>
-</head>
-<!-- //TODO: Responsible design (vía Modelo de Caja Flexible)-->
 
-<body id="weatherNode">
+        <link rel="icon" href="favicon.ico" type="icons/Weather-128.png" />
+
+        <meta property="og:title" content="Foxy Weather">
+        <meta property="og:url" content="https://github.com/babytruckdriver/foxyWeather">
+        <meta property="og:image" content="icons/Weather-128.png">
+        <meta property="og:site_name" content="Foxy Weather">
+        <meta property="og:description" content="A foxy weather app for Firefox OS and the Web!">
+        <meta property="author" content="Samuel González Izquierdo - babytruckdriver@gmail.com">
+</head>
+
+<body id="foxyWeather">
 
 <article class="flex-box-cabecera">
         <section class="encabezado">
@@ -71,9 +79,17 @@
 </footer>
 
 <script  id="forecast-template" type="text/x-handlebars-template">
+
+<!-- Cada div es una columna -->
+<!-- //TODO: colorear las columnas pares con un fondo gris clarito -->
+<!-- //TODO: Al pinchar en una columna dar información adicional sobre el día seleccionado (info comentada en la plantilla) e información que no se muestra en la pantalla (por tamaño reducido)
+pero que se recoje en JavaScript (velociad del viento, etc...) -->
 <div class="resultado tiempo-actual">
         <ul>
-                <li class="cabecera">{{cabecera}}</li>
+                <li class="cabecera">
+                        <span>{{cabeceraDiaSemana}}</span>
+                        <span>{{cabeceraDiaMes}}</span>
+                </li>
                 <li>
                         <ul>
                                 <li class="centrado">
@@ -82,13 +98,13 @@
                                 <li class="text-info">Temp:
                                         <span id="temperatura" class="resaltado">{{temperatura}}</span>
                                 </li>
-                                <li class="text-info">Estado:
+                                <li class="text-info extra">Estado:
                                         <span id="estado" class="resaltado">{{estado}}</span>
                                 </li>
-                                <li class="text-info">Precipitación:
+                                <li class="text-info extra">Precipitación:
                                         <span id="precipitacion" class="resaltado">{{precipitacion}}</span>
                                 </li>
-                                <li class="text-info">Viento:
+                                <li class="text-info extra">Viento:
                                         <span id="velocidad-viento" class="resaltado">{{velocidadViento}}</span>
                                 </li>
                         </ul>
