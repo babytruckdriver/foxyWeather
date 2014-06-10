@@ -175,6 +175,20 @@ div#error-container {
         -moz-box-sizing: border-box;
         -webkit-box-sizing: border-box;
         box-sizing: border-box;
+        cursor: pointer;
+}
+
+.resultado:nth-child(odd) {
+        background-color: #dbdbdb;
+        border-radius: 4px;
+}
+
+.resultado:hover {
+        opacity: .6;
+}
+
+.resultado:active {
+        opacity: .3;
 }
 
 .tiempo-actual {
@@ -343,8 +357,15 @@ div#error-container {
 }
 
 /* Si el ancho de pantalla es menor que 400px no se visualiza toda la información diaria del tiempo*/
-@media all and (max-width: 400px) {
+@media all and (max-width: 600px) {
         .resultado .extra {
                 display: none;
+        }
+        #foxyWeather {
+                background: #fff;
+                padding: 20px;
+                margin-bottom: 40px;
+                box-shadow: none;
+                border-radius: 0;
         }
 }
