@@ -25,9 +25,10 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                 cacheElements: function () {
                         this.window = $(window);
                         this.forecastTemplate = Handlebars.compile($('#forecast-template').html());
-                        this.weatherNode = $("#foxyWeather");
-                        this.condicionesActuales = this.weatherNode.find("#condicionesActuales");
-                        this.cuerpo = this.weatherNode.find(".cuerpo");
+                        this.logo = $("#logo");
+                        this.foxyWeather = $("#foxyWeather");
+                        this.condicionesActuales = this.foxyWeather.find("#condicionesActuales");
+                        this.cuerpo = this.foxyWeather.find(".cuerpo");
                         this.temperatura = this.condicionesActuales.find(".temperatura");
                         this.estado = this.condicionesActuales.find(".estado");
                         this.localidadTemperatura = this.condicionesActuales.find(".localidad-temperatura");
@@ -110,7 +111,7 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                         this.errorContainer.html(errorMsg);
                         this.errorContainer.slideDown(200).delay(5000).slideUp(2000);
                 },
-                eventWeatherInfo: function () {
+                eventWeatherInfo: function (event) {
 
                         // Validaciones sobre los campos de entrada
                         var erroresEntrada = false;
@@ -132,8 +133,9 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
 
                         // Si la tecla pulsada es un 'Intro' lanzar el evento 'click' del botón
                         if (event.keyCode === ENTER_KEY) {
+                                setTimeout(function() {this.logo.focus();}, 0);
                                 this.btoGetWeatherInfo.click();
-                                return true;
+                                return false;
                         }
 
                         // Se utiliza 'event.target' en vez de 'this', ya que este en vez de hacer referencia al objeto

@@ -179,7 +179,7 @@ div#error-container {
 }
 
 .resultado:nth-child(odd) {
-        background-color: #dbdbdb;
+        background-color: #f9f9f9;
         border-radius: 4px;
 }
 
@@ -218,7 +218,7 @@ div#error-container {
 }
 
 #social {
-        margin: 5px;
+        margin: 15px 5px 5px 5px;
         padding: 5px;
         background-color: #fffdea;
         border-radius: 4px;
@@ -354,9 +354,19 @@ div#error-container {
         [class="text-info"] {
                 text-align: center;
         }
+
+        .imagen-actual {
+                transform: scale(1);
+                -webkit-transform: scale(1);
+        }
+
+        .temperatura-temperatura {
+                font-size: 3em;
+                line-height: 28px;
+        }
 }
 
-/* Si el ancho de pantalla es menor que 400px no se visualiza toda la información diaria del tiempo*/
+/* Si el ancho de pantalla es menor que 600px no se visualiza 'toda' la información diaria del tiempo*/
 @media all and (max-width: 600px) {
         .resultado .extra {
                 display: none;
