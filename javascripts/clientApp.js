@@ -14,6 +14,10 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                 LOCALIDAD_CALL = 1;
 
         var App = {
+
+                //Propiedad para almacenar información sobre la predicción de cada día
+                data: [],
+
                 init: function () {
 
                         // Poner el foco en el primer campo de entrada visible
@@ -25,6 +29,7 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                 cacheElements: function () {
                         this.window = $(window);
                         this.forecastTemplate = Handlebars.compile($('#forecast-template').html());
+                        this.extendedInfoTemplate = Handlebars.compile($('#extended-info-template').html());
                         this.logo = $("#logo");
                         this.foxyWeather = $("#foxyWeather");
                         this.condicionesActuales = this.foxyWeather.find("#condicionesActuales");
@@ -37,6 +42,7 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                         this.indicadorAjaxEnCurso = this.cuerpo.find("#indicadorAjaxEnCurso");
                         this.btoGetWeatherInfo = this.cuerpo.find("#getWeatherInfo");
                         this.forecastContainer = this.cuerpo.find("#forecast-container");
+                        this.extendedInfoContainer = this.cuerpo.find("#extended-info-container");
                         this.validacionesContainer = this.cuerpo.find("#validaciones-container");
                         this.errorContainer = this.cuerpo.find("#error-container");
                         this.txtLocalidad = this.cuerpo.find(".localidad");
@@ -47,6 +53,13 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                         this.btoGetWeatherInfo.on("click", this.eventWeatherInfo.bind(this));
                         this.localidad.on("click", this.eventMuestraBuscar.bind(this));
                         this.localidad.on("keyup", this.eventLocalidad.bind(this));
+                        this.forecastContainer.on("click", ".resultado", this.eventShowExtendedInfo.bind(this));
+
+                        // En este caso se deve delegar y no se puede cachear el elmento ".icon-extende-close" porque al arrancar la aplicación
+                        // aún no existe el elemento
+                        this.extendedInfoContainer.on("click", ".icon-extended-close", function () {
+                                this.extendedInfoContainer.hide().empty();
+                        }.bind(this));
 
                         this.window.on("hashchange", this.route.bind(this));
 
@@ -60,6 +73,7 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                                 ajaxInProgress = false;
                                 that.indicadorAjaxEnCurso.hide();
                         });
+
                 },
                 route: function (e) {
                         var hash = window.location.hash.slice(2);
@@ -82,35 +96,6 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                 Métodos utilizados desde 'bindEvents'
                 */
 
-                // Muestra mensajes de validación
-                muestraValidaciones: function (arrValidaciones) {
-
-                        //La información meteorológica anteriormente cargada se esconde
-                        this.forecastContainer.hide();
-                        this.condicionesActuales.hide();
-
-                        this.validacionesContainer.html("<span class='centrado'>" + arrValidaciones[0] + "<span>");
-
-                        if (this.validacionesContainer.is(":visible")) {
-                                this.validacionesContainer.slideUp(200).delay(200).slideDown(200);
-                        } else {
-                                this.validacionesContainer.slideDown(200);
-                        }
-                },
-
-                // Maneja los errores de la petición Ajax
-                // err = { cod, desc }
-                errorHandle: function (err) {
-                        // La información meteorológica anteriormente cargada se oculta, además de los errores que se estén ya mostrando
-                        this.forecastContainer.hide();
-                        this.condicionesActuales.hide();
-                        this.errorContainer.hide();
-
-                        var errorMsg = err.statusText + "\n Error " + err.status;
-
-                        this.errorContainer.html(errorMsg);
-                        this.errorContainer.slideDown(200).delay(5000).slideUp(2000);
-                },
                 eventWeatherInfo: function (event) {
 
                         // Validaciones sobre los campos de entrada
@@ -162,6 +147,47 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                         $(event.target).removeClass("error-input");
                         this.localidad.select();
                         this.localidad.css("width", "93%");
+                },
+
+                eventShowExtendedInfo: function (event) {
+                        // TODO: Mostrar plantilla handlebars con información extendida del tiempo
+                        // Objeto de configuración de entrada para la plantilla Handlebars 'extendedInfoTemplate'
+                        // NOTE: event.currentTarget hace referencia al elemento del DOM donde está puesto el listener, y no el elemento hijo que proboca el evento (event.target)
+                        var extendedInfo = this.data[$(event.currentTarget).data("index")];
+
+                        this.extendedInfoContainer.append(this.extendedInfoTemplate(extendedInfo));
+                        this.extendedInfoContainer.show();
+                },
+
+
+                // Muestra mensajes de validación
+                muestraValidaciones: function (arrValidaciones) {
+
+                        //La información meteorológica anteriormente cargada se esconde
+                        this.forecastContainer.hide();
+                        this.condicionesActuales.hide();
+
+                        this.validacionesContainer.html("<span class='centrado'>" + arrValidaciones[0] + "<span>");
+
+                        if (this.validacionesContainer.is(":visible")) {
+                                this.validacionesContainer.slideUp(200).delay(200).slideDown(200);
+                        } else {
+                                this.validacionesContainer.slideDown(200);
+                        }
+                },
+
+                // Maneja los errores de la petición Ajax
+                // err = { cod, desc }
+                errorHandle: function (err) {
+                        // La información meteorológica anteriormente cargada se oculta, además de los errores que se estén ya mostrando
+                        this.forecastContainer.hide();
+                        this.condicionesActuales.hide();
+                        this.errorContainer.hide();
+
+                        var errorMsg = err.statusText + "\n Error " + err.status;
+
+                        this.errorContainer.html(errorMsg);
+                        this.errorContainer.slideDown(200).delay(5000).slideUp(2000);
                 },
 
                 // Recupera la información meteorológica para la localización introducida
@@ -252,10 +278,10 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
 
                                 if (jsonForecast !== undefined) {
 
-                                        // Se quiere utilizar 'this' dentro del bucle, pero los bucles crean sus propios 'this'
-                                        // por lo que guardo el 'this' actual en una variable alcanzable desde dentro del bucle llamada 'that'
-                                        var that = this;
                                         this.forecastContainer.empty();
+
+                                        //Se vacía el array con la información meteorológica que contuviese para volverlo a rellenar con la información nueva
+                                        this.data.length = 0;
 
                                         $.each(jsonForecast, function (key, value) {
 
@@ -283,10 +309,14 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                                                         temperatura: value.tempMaxC + "/" + value.tempMinC + "Cº Max/min",
                                                         estado: value.weatherDesc[0].value,
                                                         precipitacion: value.precipMM + "mm",
-                                                        velocidadViento: value.windspeedKmph + "Km/h"
+                                                        velocidadViento: value.windspeedKmph + "Km/h",
+                                                        colIndex: key
                                                 };
-                                                that.forecastContainer.append(that.forecastTemplate(forecast));
-                                        });
+
+                                                //Se almacena el objeto con la información formateada de cada día en la propiedad data para poder ser reutilizada posteriormente
+                                                this.data.push(forecast);
+                                                this.forecastContainer.append(this.forecastTemplate(forecast));
+                                        }.bind(this));
 
                                         this.forecastContainer.append("<div class='clear'></div>");
                                 }

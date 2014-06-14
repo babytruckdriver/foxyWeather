@@ -64,6 +64,10 @@
 
         </article>
 
+        <article id="extended-info-container" class="oculto">
+
+        </article>
+
         <div id="error-container" class="oculto"></div>
         <div id="validaciones-container" class="oculto"></div>
 </main>
@@ -78,12 +82,51 @@
         </ul>
 </footer>
 
+<!-- PLANTILLAS -->
+
+<script  id="extended-info-template" type="text/x-handlebars-template">
+<div class="extended-info">
+        <header>
+                <span class="extended-title cabecera">{{cabeceraDiaSemana}} {{cabeceraDiaMes}}</span>
+                <span ><a alt="Cerrar" class="icon-extended-close"></a></span>
+        </header>
+        <main>
+                <ul>
+                        <li>
+                                <ul>
+                                        <li class="centrado">
+                                                <img id="imagen" class="imagen-reducida" src="{{imagen}}">
+                                        </li>
+                                        <li class="text-info">Temp:
+                                                <span id="temperatura" class="resaltado">{{temperatura}}</span>
+                                        </li>
+                                        <li class="text-info extra">Estado:
+                                                <span id="estado" class="resaltado">{{estado}}</span>
+                                        </li>
+                                        <li class="text-info extra">Precipitación:
+                                                <span id="precipitacion" class="resaltado">{{precipitacion}}</span>
+                                        </li>
+                                        <li class="text-info extra">Viento:
+                                                <span id="velocidad-viento" class="resaltado">{{velocidadViento}}</span>
+                                        </li>
+                                </ul>
+                        </li>
+                </ul>
+        </main>
+        <footer>
+                <!-- //TODO: Añadir pié a la información extendida-->
+        </footer>
+</div>
+</script>
+
 <script  id="forecast-template" type="text/x-handlebars-template">
 
 <!-- Cada div es una columna -->
 <!-- //TODO: Al pinchar en una columna dar información adicional sobre el día seleccionado (info comentada en la plantilla) e información que no se muestra en la pantalla (por tamaño reducido)
 pero que se recoje en JavaScript (velociad del viento, etc...) -->
-<div class="resultado tiempo-actual">
+<!-- En la propiedad 'data-index' se almacenará el índice de la columna-->
+        <!-- //NOTE: El nombre de las propiedad "data-" se comvierte automáticamente en minúsculas, por lo que no deben escribirse mayúsculas -->
+<div class="resultado tiempo-actual" data-index="{{colIndex}}">
         <ul>
                 <li class="cabecera">
                         <span>{{cabeceraDiaSemana}}</span>

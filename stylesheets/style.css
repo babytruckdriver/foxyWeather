@@ -207,6 +207,22 @@ div#error-container {
         display: block;
         color: #A4A4A4;
 }
+.extended-info {
+        position: fixed;
+        top: 10px;
+        padding: 10px;
+        width: 520px;
+        height: 90%;
+        border-radius: 8px;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+
+        opacity: 0.8;
+        background-color: #000;
+        color: white;
+        z-index: 999;
+}
 #localidad {
         order: 2;
         padding: 2px 6px;
@@ -295,6 +311,25 @@ div#error-container {
         width: 0;
 }
 
+.icon-extended-close {
+        margin-right: 8px;
+        cursor: pointer;
+        float: right;
+}
+
+.icon-extended-close::before {
+        content: "\2716";
+        font-size: 3em;
+}
+
+.icon-extended-close:hover::before {
+        opacity: .6;
+}
+
+.icon-extended-close:active::before {
+         color: #d68989;
+}
+
 .icon-search::before {
         content: "\1F50D";
         font-size: 3em;
@@ -366,7 +401,8 @@ div#error-container {
         }
 }
 
-/* Si el ancho de pantalla es menor que 600px no se visualiza 'toda' la información diaria del tiempo*/
+/* Si el ancho de pantalla es menor que 600px no se visualiza 'toda' la información diaria del tiempo. */
+/* Además, la capa de información extra no debe ajustarse */
 @media all and (max-width: 600px) {
         .resultado .extra {
                 display: none;
@@ -377,5 +413,8 @@ div#error-container {
                 margin-bottom: 40px;
                 box-shadow: none;
                 border-radius: 0;
+        }
+        .extended-info {
+                width: 90%;
         }
 }
