@@ -359,6 +359,10 @@ div#error-container {
         order: 2;
 }
 
+.condiciones-actuales>a {
+        cursor: pointer;
+}
+
 .flex-box-cabecera {
         display: flex;
         flex-direction: row;

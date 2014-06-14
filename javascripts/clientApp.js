@@ -33,6 +33,7 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                         this.logo = $("#logo");
                         this.foxyWeather = $("#foxyWeather");
                         this.condicionesActuales = this.foxyWeather.find("#condicionesActuales");
+                        this.condicionesActualesLink = this.condicionesActuales.find(">a");
                         this.cuerpo = this.foxyWeather.find(".cuerpo");
                         this.temperatura = this.condicionesActuales.find(".temperatura");
                         this.estado = this.condicionesActuales.find(".estado");
@@ -54,6 +55,7 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                         this.localidad.on("click", this.eventMuestraBuscar.bind(this));
                         this.localidad.on("keyup", this.eventLocalidad.bind(this));
                         this.forecastContainer.on("click", ".resultado", this.eventShowExtendedInfo.bind(this));
+                        this.condicionesActualesLink.on("click", this.eventShowExtendedInfo.bind(this));
 
                         // En este caso se deve delegar y no se puede cachear el elmento ".icon-extende-close" porque al arrancar la aplicación
                         // aún no existe el elemento
@@ -107,6 +109,10 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                         }
 
                         if (!erroresEntrada) {
+
+                                //Al comenzar una nueva consulta se resetea la propiedad 'data'
+                                this.data.length = 0;
+
                                 this.validacionesContainer.hide();
                                 this.getWeatherInfo();
                         }
@@ -150,7 +156,7 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                 },
 
                 eventShowExtendedInfo: function (event) {
-                        // TODO: Mostrar plantilla handlebars con información extendida del tiempo
+                        // TODO: Mejorar plantilla handlebars con información extendida del tiempo
                         // Objeto de configuración de entrada para la plantilla Handlebars 'extendedInfoTemplate'
                         // NOTE: event.currentTarget hace referencia al elemento del DOM donde está puesto el listener, y no el elemento hijo que proboca el evento (event.target)
                         var extendedInfo = this.data[$(event.currentTarget).data("index")];
@@ -258,10 +264,30 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                                 });
 
                                 // Carga del tiempo actual
-                                this.temperatura.text(json.data.current_condition[0].temp_C + "Cº");
-                                this.estado.text(json.data.current_condition[0].weatherDesc[0].value);
+                                // Objeto de configuración del timepo actual
+                                // TODO: Crear plantilla Handlebars para el tiempo actual
+                                // TODO: Poblar estes objecto con toda la información que necesite la información extendida
+                                var forecast = {
+                                        cabeceraDiaSemana: "Condiciones Actuales",
+                                        cabeceraDiaMes: "",
+                                        imagen: json.data.current_condition[0].weatherIconUrl[0].value,
+                                        localidad: json.data.request[0].query,
+                                        temperatura: json.data.current_condition[0].temp_C + "Cº",
+                                        estado: json.data.current_condition[0].weatherDesc[0].value,
+                                        precipitacion: "TODO" + "mm",
+                                        velocidadViento: "TODO" + "Km/h",
+                                        colIndex: 0
+                                };
+
+                                //Se almacena el objeto con la información actual formateada en la propiedad data para poder ser reutilizada posteriormente
+                                this.data.push(forecast);
+
+                                this.condicionesActualesLink.data("index", 0);
+
+                                this.temperatura.text(forecast.temperatura);
+                                this.estado.text(forecast.estado);
                                 $(this.temperatura).closest("div").show();
-                                this.localidadTemperatura.text(json.data.request[0].query);
+                                this.localidadTemperatura.text(forecast.localidad);
 
                                 // FUTURE utilizar los siguientes datos referentes al tiempo actual
                                 /*
@@ -271,7 +297,7 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                                 */
 
                                 // Carga de la imagen asociada al tiempo actual
-                                this.imagenActual.attr("src", json.data.current_condition[0].weatherIconUrl[0].value);
+                                this.imagenActual.attr("src", forecast.imagen);
 
                                 // Presentación de la previsión meteorológica (diferentes de temperatura actual)
                                 var jsonForecast = json.data.weather;
@@ -279,9 +305,6 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                                 if (jsonForecast !== undefined) {
 
                                         this.forecastContainer.empty();
-
-                                        //Se vacía el array con la información meteorológica que contuviese para volverlo a rellenar con la información nueva
-                                        this.data.length = 0;
 
                                         $.each(jsonForecast, function (key, value) {
 
@@ -302,7 +325,7 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                                                 }
 
                                                 // Objeto de configuración de entrada para la plantilla Handlebars 'forecastTemplate'
-                                                var forecast = {
+                                                forecast = {
                                                         imagen: value.weatherIconUrl[0].value,
                                                         cabeceraDiaSemana: formatedDay,
                                                         cabeceraDiaMes: diaMes,
@@ -310,7 +333,7 @@ define(["helper/util", "handlebars", "jquery"], function (util, Handlebars, $) {
                                                         estado: value.weatherDesc[0].value,
                                                         precipitacion: value.precipMM + "mm",
                                                         velocidadViento: value.windspeedKmph + "Km/h",
-                                                        colIndex: key
+                                                        colIndex: key+1
                                                 };
 
                                                 //Se almacena el objeto con la información formateada de cada día en la propiedad data para poder ser reutilizada posteriormente
